@@ -37,7 +37,19 @@
  # Professional README Generator
  
  ## Criteria 1: Command-line application that accepts user input
-...
+This code uses the Node.js package inquirer to prompt the user through the command line and ask a series of questions. These questions are designed to gather the necessary information to generate a README file for a project.
+
+The const questions variable is an array of objects, with each object representing a question that the user will be asked. Each object has a type, message, and name property.
+
+The type property specifies the type of prompt that will be used to ask the question. In this code, there are input prompts, which allow the user to type in a response, and a list prompt, which presents the user with a list of options to choose from.
+
+The message property is the text that will be displayed to the user as the prompt for the question.
+
+The name property is the identifier for the user's response to the question. It will be used later on to access the user's input and insert it into the README file.
+
+Once all the questions have been defined, the inquirer.prompt(questions) method is called, passing in the questions array as an argument. This will display the questions to the user in the command line and wait for the user to input their responses.
+
+Once the user has answered all the questions, the inquirer.prompt(questions) method will return an object containing the user's responses. This object can then be used to dynamically generate a README file using a template literal or any other method of your choosing.
 
 ```
 // Uses inquirer packages in order to prompt the user through command line
@@ -95,20 +107,44 @@ const questions = [
 ];
 ```
 
-However, the documentation of this API refers to the connection with another API from the same company with the name of Geocoding API, which manages to convert the name of a city into units of longitude and latitude, units that work as variables to obtain the temperature. in the initial API.
+## Criteria 2: Generate File
+This code uses the responses obtained from the inquirer prompts to create a new README file using a template literal. The response parameter passed to the Start function is an object containing the user's responses to the prompts.
 
-In this way, both complement each other and therefore it is necessary to execute the function to call the Geocoding API first and it already interprets the information put in the text input by the user, reflects it and obtains the temperature of the desired place.
+The first part of the code assigns a license badge to the response.licences property based on the user's selection of the license type from the list prompt. This is done using a switch statement, where the corresponding badge link is assigned to response.licences based on the selected license type.
 
-![geocoding](https://user-images.githubusercontent.com/118247139/213890473-d8d41e13-1dc8-4117-90aa-8e3fb3ef1b95.png)
-> ###### Note: The use of different console.log() over the function are mainly use with the purpouse of debuging and accesing the data sent by the server.
+The next part of the code creates a content string using a template literal. This string contains the user's responses to the prompts, which are inserted into the appropriate sections of the README template.
 
-## Criteria 2: Search History
-To save previous searches performed on the website, Local Storage is used in conjunction with JSON.parse to save the information already used in the browser of the local device.
+For example, the response.title is used to create a header for the title section, and the response.description is inserted into the description section of the README. The response.email and response.user are also included in the questions section of the README, along with a message inviting the reader to contact the repository owners if they have any questions or issues.
 
-In addition to this, the .index() function is used to search within the array in Local Storage if there is an element with the same name so as not to create a duplicate.
+Finally, the fs.writeFile() method is used to create a new README.md file in the current directory and save the content string to it. If an error occurs during the file writing process, the throw err statement will throw an error and stop the program. Otherwise, a message is logged to the console indicating that the file has been saved.
 
-To display these elements, another function is used that uses a for loop to display each one in the form of a p below the browser bar.
+```
+function Start (response) {
+    switch (response.licences) {
+        case "MIT":
+            response.licences = "[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)";
+            break;
+        case "GPLv2":
+            response.licences = "[![License: GPL v2](https://img.shields.io/badge/License-GPL%20v2-blue.svg)](https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html)";
+            break;
+        case "Apache":
+            response.licences = "[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)";
+            break;
+        case "BSD 3-clause":
+            response.licences = "[![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)";
+            break;
+        case "other":
+            break;
+    }
 
-Additionally, for the future you should consider adding a maximum of elements to the array saved in Local Storage as well as a button to clear the search history.
-
-![save](https://user-images.githubusercontent.com/118247139/213890549-1d70c51f-812b-4a4a-ad37-fd5c991c86ed.png)
+    const content = `# ${response.title} <a id="title"></a> \n\n ${response.licences}
+    \n\n ## Description <a id="description"></a> \n\n ${response.description} 
+    \n\n ## Usage <a id="usage"></a> \n\n ${response.usage} \n\n ## Installation <a id="installation"></a> \n\n ${response.installation} \n\n ## Contributing Instructions <a id="contributing"></a> \n\n ${response.contributing} 
+    \n\n ## Tests <a id="tests"></a> \n\n ${response.tests} \n\n ## Questions <a id="questions"></a> \n\n If you have any questions or doubts about how to use this repository, please don't hesitate to reach out to us. Our team is always here to help. You can contact us via email or through our GitHub account. We look forward to hearing from you! \n\n **Email:** ${response.email} \n\n **Github Account:** [${response.user}](https://github.com/${response.user}) `
+    fs.writeFile('README.md', content, (err) => {
+        if (err) throw err;
+        console.log('The file has been saved!');
+});
+}
+```
+<img width="682" alt="Captura de pantalla 2023-02-15 a la(s) 12 04 45" src="https://user-images.githubusercontent.com/118247139/219114960-3106a22d-f2b5-41c7-996e-44734f9933b4.png">
