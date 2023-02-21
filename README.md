@@ -148,3 +148,6 @@ function Start (response) {
 }
 ```
 <img width="682" alt="Captura de pantalla 2023-02-15 a la(s) 12 04 45" src="https://user-images.githubusercontent.com/118247139/219114960-3106a22d-f2b5-41c7-996e-44734f9933b4.png">
+
+Walkthrough video 
+https://youtu.be/MJ34iEzSIlo
